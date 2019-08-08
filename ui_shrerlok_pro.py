@@ -8,7 +8,7 @@ print("helloworld!")
 
 name = input("paste name:")
 surname = input("paste surname:")
-l_number = input("paste any known lucky numbers:").split(",")
+l_number = input("paste any known lucky numbers:").split(",") #dzieli string na zmienne uzywajac wartosci podanej w nawiasie jako miejsce ciecia 
 nickname = input("paste any known nicknames:").split(",")
 print("date format must be days.monts.year like: 24.04.1998")
 birthday_date = input("paste birthday date:").split(".")
