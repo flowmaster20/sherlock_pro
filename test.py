@@ -15,7 +15,12 @@ class TestSherlockPro(unittest.TestCase):
         msg = "wrong output from main function"
         self.assertEqual(prepare("mateusz","kojro",["16","18"],["mati"],["30","06","2000"],["maraton"],["mkojro20","matrix"]),ex_output,msg)
 
-
+    def test_idioticly_create_combintations(self):
+        input = ["1","2"]
+        ex_output = ["111","112","121","122","211","212","221","222"]
+        ex_output.sort()
+        msg = "creating combinations failed"
+        self.assertEqual(idioticly_create_combinations(input),ex_output,msg)
 
 
 if __name__ == '__main__':

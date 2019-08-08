@@ -27,3 +27,12 @@ def prepare(name, surname, l_number, nickname, birthday_date, pet_name, known_us
 def create_all_combinations(tab,how_many):
     for i in range(how_many**len(tab)): #jakis pomysl na laczenie wszytskich wyrazow do siebie ale na razie jeszcze sam nie wiem jak to ma dzialac do konca
 """
+def idioticly_create_combinations(tab):
+    all = []
+    for x in range(len(tab)):
+        for y in range(len(tab)):
+            for z in range(len(tab)):
+                query = tab[x]+tab[y]+tab[z]
+                all.append(query)
+    all.sort()
+    return all
