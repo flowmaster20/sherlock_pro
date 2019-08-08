@@ -11,3 +11,6 @@ for i in range(5**5):
     tab.append(data)
 tab = set(tab)
 print (5**5,len(tab),len(tab)/5**5)
+
+
+for 
