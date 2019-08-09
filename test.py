@@ -1,7 +1,11 @@
 import unittest
 from functions import *
 from run import *
+"""
+File with tests that are running every time that project is pushed to github
+if you want to trigger them manualy run this file 
 
+"""
 class TestSherlockPro(unittest.TestCase):
 
     def test_create_mutations(self):

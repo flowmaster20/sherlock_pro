@@ -29,10 +29,12 @@ def create_all_combinations(tab,how_many):
 """
 def idioticly_create_combinations(tab):
     all = []
+
+    #losujemy wszytskie kombinacje z  3 skladinikow tabeli
     for x in range(len(tab)):
         for y in range(len(tab)):
             for z in range(len(tab)):
-                query = tab[x]+tab[y]+tab[z]
-                all.append(query)
-    all.sort()
+                query = tab[x]+tab[y]+tab[z] #laczymy 3 skladni ki w jeden
+                all.append(query) #dodajemy do tablicy wynikow
+    all.sort()  #soortujemy tablice alfabetycznie
     return all
