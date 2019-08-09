@@ -1,5 +1,5 @@
 import json as j
-
+#głupia zmiana
 def get_data():
     print("helloworld!")
 
