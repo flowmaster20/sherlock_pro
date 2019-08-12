@@ -452,7 +452,12 @@ def main(k_user):
                 file.write(dictionary["url_user"] + "\n")
         file.write("Total Websites : {}".format(exists_counter))
         file.close()
-        return exists_counter
+        if (exists_counter < 1):
+            status = 0
+        else:
+            status = 1
+
+        return status
 
 
 

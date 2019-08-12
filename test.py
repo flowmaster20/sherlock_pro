@@ -28,7 +28,7 @@ class TestSherlockPro(unittest.TestCase):
         self.assertEqual(idioticly_create_combinations(input),ex_output,msg)
     def test_sherlock(self):
         input = "mateusz"
-        ex_output = None
+        ex_output = 1
         msg = "Sherlock returned with 0 results wit known viable output grater than 0"
         self.assertEqual(main(input),ex_output,msg)
 
