@@ -1,9 +1,10 @@
 import unittest
 from functions import *
 from run import *
+from looker.sherlock import *
 """
 File with tests that are running every time that project is pushed to github
-if you want to trigger them manualy run this file 
+if you want to trigger them manualy run this file
 
 """
 class TestSherlockPro(unittest.TestCase):
@@ -25,6 +26,11 @@ class TestSherlockPro(unittest.TestCase):
         ex_output.sort()
         msg = "creating combinations failed"
         self.assertEqual(idioticly_create_combinations(input),ex_output,msg)
+    def test_sherlock(self):
+        input = "mateusz"
+        ex_output = 1
+        msg = "Sherlock returned with 0 results wit known viable output grater than 0"
+        self.assertEqual(main(input),ex_output,msg)
 
 
 if __name__ == '__main__':
