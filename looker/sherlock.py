@@ -11,16 +11,15 @@ import csv
 import json
 import os
 import platform
+import random
 import re
 import sys
-import random
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
 from concurrent.futures import ThreadPoolExecutor
 from time import time
 
 import requests
 from colorama import Fore, Style, init
-
 from requests_futures.sessions import FuturesSession
 
 module_name = "Sherlock: Find Usernames Across Social Networks"
@@ -61,6 +60,7 @@ def print_info(title, info):
           Fore.WHITE + f" {info}" +
           Fore.GREEN + " on:")
 
+
 def print_error(err, errstr, var, verbose=False):
     print(Style.BRIGHT + Fore.WHITE + "[" +
           Fore.RED + "-" +
@@ -80,6 +80,7 @@ def print_found(social_network, url, response_time, verbose=False):
            format_response_time(response_time, verbose) +
            Fore.GREEN + f" {social_network}:"), url)
 
+
 def print_not_found(social_network, response_time, verbose=False):
     print((Style.BRIGHT + Fore.WHITE + "[" +
            Fore.RED + "-" +
@@ -87,6 +88,7 @@ def print_not_found(social_network, response_time, verbose=False):
            format_response_time(response_time, verbose) +
            Fore.GREEN + f" {social_network}:" +
            Fore.YELLOW + " Not Found!"))
+
 
 def print_invalid(social_network, msg):
     """Print invalid search result."""
@@ -110,13 +112,14 @@ def get_response(request_future, error_type, social_network, verbose=False, retr
 
     # In case our proxy fails, we retry with another proxy.
     except requests.exceptions.ProxyError as errp:
-        if retry_no>0 and len(proxy_list)>0:
-            #Selecting the new proxy.
+        if retry_no > 0 and len(proxy_list) > 0:
+            # Selecting the new proxy.
             new_proxy = random.choice(proxy_list)
             new_proxy = f'{new_proxy.protocol}://{new_proxy.ip}:{new_proxy.port}'
             print(f'Retrying with {new_proxy}')
-            request_future.proxy = {'http':new_proxy,'https':new_proxy}
-            get_response(request_future,error_type, social_network, verbose,retry_no=retry_no-1)
+            request_future.proxy = {'http': new_proxy, 'https': new_proxy}
+            get_response(request_future, error_type,
+                         social_network, verbose, retry_no=retry_no - 1)
         else:
             print_error(errp, "Proxy error:", social_network, verbose)
     except requests.exceptions.ConnectionError as errc:
@@ -195,7 +198,8 @@ def sherlock(username, site_data, verbose=False, tor=False, unique_tor=False, pr
         regex_check = net_info.get("regexCheck")
         if regex_check and re.search(regex_check, username) is None:
             # No need to do the check at the site: this user name is not allowed.
-            print_invalid(social_network, "Illegal Username Format For This Site!")
+            print_invalid(social_network,
+                          "Illegal Username Format For This Site!")
             results_site["exists"] = "illegal"
             results_site["url_user"] = ""
             results_site['http_status'] = ""
@@ -207,11 +211,11 @@ def sherlock(username, site_data, verbose=False, tor=False, unique_tor=False, pr
             results_site["url_user"] = url
             url_probe = net_info.get("urlProbe")
             if url_probe is None:
-                #Probe URL is normal one seen by people out on the web.
+                # Probe URL is normal one seen by people out on the web.
                 url_probe = url
             else:
-                #There is a special URL for probing existence separate
-                #from where the user profile normally can be found.
+                # There is a special URL for probing existence separate
+                # from where the user profile normally can be found.
                 url_probe = url_probe.format(username)
 
             request_method = session.get
@@ -297,7 +301,7 @@ def sherlock(username, site_data, verbose=False, tor=False, unique_tor=False, pr
             if not error in r.text:
                 print_found(social_network, url, response_time, verbose)
                 exists = "yes"
-                amount = amount+1
+                amount = amount + 1
             else:
                 if not print_found_only:
                     print_not_found(social_network, response_time, verbose)
@@ -308,7 +312,7 @@ def sherlock(username, site_data, verbose=False, tor=False, unique_tor=False, pr
             if not r.status_code >= 300 or r.status_code < 200:
                 print_found(social_network, url, response_time, verbose)
                 exists = "yes"
-                amount = amount+1
+                amount = amount + 1
             else:
                 if not print_found_only:
                     print_not_found(social_network, response_time, verbose)
@@ -324,7 +328,7 @@ def sherlock(username, site_data, verbose=False, tor=False, unique_tor=False, pr
                 #
                 print_found(social_network, url, response_time, verbose)
                 exists = "yes"
-                amount = amount+1
+                amount = amount + 1
             else:
                 if not print_found_only:
                     print_not_found(social_network, response_time, verbose)
@@ -427,19 +431,9 @@ def main(k_user):
     for username in args.username:
         print()
 
-
         args.folderoutput = "./output"
         if not os.path.isdir(args.folderoutput):
             os.mkdir(args.folderoutput)
-        file = open(os.path.join(args.folderoutput,username + ".txt"), "w", encoding="utf-8")
-
-        # We try to ad a random member of the 'proxy_list' var as the proxy of the request.
-        # If we can't access the list or it is empty, we proceed with args.proxy as the proxy.
-        try:
-            random_proxy = random.choice(proxy_list)
-            proxy = f'{random_proxy.protocol}://{random_proxy.ip}:{random_proxy.port}'
-        except (NameError, IndexError):
-            proxy = args.proxy
 
         results = {}
         results = sherlock(username, site_data, verbose=args.verbose,
@@ -448,6 +442,9 @@ def main(k_user):
         for website_name in results:
             dictionary = results[website_name]
             if dictionary.get("exists") == "yes":
+                if exists_counter == 0:
+                    file = open(os.path.join(args.folderoutput,
+                                             username + ".txt"), "w", encoding="utf-8")
                 exists_counter += 1
                 file.write(dictionary["url_user"] + "\n")
         file.write("Total Websites : {}".format(exists_counter))
@@ -460,12 +457,5 @@ def main(k_user):
         return status
 
 
-
 if __name__ == "__main__":
     main()
-"""
-    parser.add_argument("username", metavar='USERNAMES',default=["mateusz_chechk"],
-                        action="store",
-                        help="One or more usernames to check with social networks."
-                        )
-"""
