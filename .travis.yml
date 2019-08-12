@@ -4,4 +4,5 @@ language: python
 script:
     - pip3 install requests
     - pip3 install colorama
+    - pip3 install requests_futures
     - cd $TRAVIS_BUILD_DIR; python3 -m unittest -v test
